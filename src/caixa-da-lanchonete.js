@@ -58,48 +58,9 @@ class CaixaDaLanchonete {
         if(this.valida_forma_pagamento(metodoDePagamento) === false) {
             return "Forma de pagamento inválida!"
         }
-        const teste = this.calcula_total(metodoDePagamento, itens)
-        return teste
-
+        const res = this.calcula_total(metodoDePagamento, itens)
+        return res
     }
-       
-    calcula_total(metodoPagamento, itens){
-        const compra = itens.map(item => item.slice(0, item.indexOf(',')))
-        let total_bruto = 0;
-        for(let i = 0; i < itens.length; i++){
-            const element = itens[i]
-            const item_name = element.slice(0, element.indexOf(','))
-            const item_quantity = parseInt(element.slice(element.indexOf(',')+1))
-            
-            if(item_quantity > 0) {
-                if(this.itens_validos[item_name].item_extra) {
-                    if(compra.includes(this.itens_validos[item_name].item_prin_nome)) {
-                        total_bruto += this.itens_validos[item_name].preco * item_quantity
-                    } else {
-                        return 'Item extra não pode ser pedido sem o principal'
-                    }
-                } else {
-                    total_bruto += this.itens_validos[item_name].preco * item_quantity
-                }
-            } else {
-                return 'Quantidade inválida!'
-            }
-        
-        }
-        let total_liquido = this.calcula_taxa(total_bruto, metodoPagamento)
-        return total_liquido
-    }
-
-    calcula_taxa(valor, metodoPagamento) {
-        if(metodoPagamento === 'dinheiro') {
-            valor *= 0.95
-        } else if (metodoPagamento === 'credito') {
-            valor *= 1.03
-        }
-        let valor_formatado = `R$ ${valor.toFixed(2)}`.replace('.', ',')
-        return valor_formatado
-    }
-
 
     valida_itens(itens) {
         for (let i = 0; i < itens.length; i++){
@@ -117,11 +78,42 @@ class CaixaDaLanchonete {
         return this.metodo_pagamento_valido.includes(metodo) ? true : false
     }
 
-    
+    calcula_total(metodoPagamento, itens){
+        const compra_names = itens.map(item => item.slice(0, item.indexOf(','))) // retorna um array com todos os itens comprados
+        let total_bruto = 0;
+        for(let i = 0; i < itens.length; i++){
+            const element = itens[i]
+            const item_name = compra_names[i]
+            const item_quantity = parseInt(element.slice(element.indexOf(',')+1))
+            
+            if(item_quantity > 0) {
+                if(this.itens_validos[item_name].item_extra) {
+                    if(compra_names.includes(this.itens_validos[item_name].item_prin_nome)) {
+                        total_bruto += this.itens_validos[item_name].preco * item_quantity
+                    } else {
+                        return 'Item extra não pode ser pedido sem o principal'
+                    }
+                } else {
+                    total_bruto += this.itens_validos[item_name].preco * item_quantity
+                }
+            } else {
+                return 'Quantidade inválida!'
+            }
+        
+        }
+        let total_liquido = this.calcula_taxa(total_bruto, metodoPagamento) // total_liquido = total_liquido - (descontos: taxas)
+        return total_liquido
+    }
+
+    calcula_taxa(valor, metodoPagamento) {
+        if(metodoPagamento === 'dinheiro') {
+            valor *= 0.95
+        } else if (metodoPagamento === 'credito') {
+            valor *= 1.03
+        }
+        let valor_formatado = `R$ ${valor.toFixed(2)}`.replace('.', ',')
+        return valor_formatado
+    }
 }
-
-const C1 = new CaixaDaLanchonete();
-console.log(C1.calcularValorDaCompra('dinheiro', ['cafe,4', 'sanduiche,3', 'queijo,2']));
-
 
 export { CaixaDaLanchonete };

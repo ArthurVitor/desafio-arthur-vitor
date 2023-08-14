@@ -45,13 +45,13 @@ O sistema deve receber essa informação como string, utilizando a grafia exatam
 
 ### OUTRAS REGRAS
 
-- Caso item extra seja informado num pedido que não tenha o respectivo item principal, apresentar mensagem "Item extra não pode ser pedido sem o principal".
+- Caso item extra seja informado num pedido que não tenha o respectivo item principal, apresentar mensagem "Item extra não pode ser pedido sem o principal". -------- FEITO
 - Combos não são considerados como item principal.
-- É possível pedir mais de um item extra sem precisar de mais de um principal.
-- Se não forem pedidos itens, apresentar mensagem "Não há itens no carrinho de compra!"
-- Se a quantidade de itens for zero, apresentar mensagem "Quantidade inválida!".
-- Se o código do item não existir, apresentar mensagem "Item inválido!"
-- Se a forma de pagamento não existir, apresentar mensagem "Forma de pagamento inválida!"
+- É possível pedir mais de um item extra sem precisar de mais de um principal. -------- FEITO
+- Se não forem pedidos itens, apresentar mensagem "Não há itens no carrinho de compra!" -------- FEITO
+- Se a quantidade de itens for zero, apresentar mensagem "Quantidade inválida!". -------- FEITO 
+- Se o código do item não existir, apresentar mensagem "Item inválido!" -------- FEITO 
+- Se a forma de pagamento não existir, apresentar mensagem "Forma de pagamento inválida!" -------- FEITO
 
 ### O CÓDIGO
 Você está recebendo uma estrutura básica para desenvolver a lógica do caixa. O arquivo principal está localizado dentro da pasta `src` e se chama `caixa-da-lanchonete.js`. Você pode desenvolver a sua lógica criando outros arquivos, métodos e até mesmo outras classes, porém o resultado deve poder ser obtido através do método `calcularValorDaCompra`.
