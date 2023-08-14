@@ -1,43 +1,127 @@
-class CaixaDaLanchonete {
+class CaixaDaLanchonete { 
+
+    constructor () {
+        this.itens_validos = {
+            cafe: {
+                preco:3,
+                item_extra:false,
+                item_prin_nome:null,
+            },
+            chantily: {
+                preco:1.5,
+                item_extra:true,
+                item_prin_nome:'cafe',
+            },
+            suco: {
+                preco:6.2,
+                item_extra:false,
+                item_prin_nome:null,
+            },
+            sanduiche: {
+                preco:6.5,
+                item_extra: false,
+                item_prin_nome: null,
+            },
+            queijo: {
+                preco:2,
+                item_extra: true,
+                item_prin_nome: 'sanduiche',
+            },
+            salgado: {
+                preco:7.25,
+                item_extra: false,
+                item_prin_nome: null,
+            },
+            combo1: {
+                preco:9.5,
+                item_extra: false,
+                item_prin_nome: null,
+            },
+            combo2: {
+                preco: 7.5,
+                item_extra: false,
+                item_prin_nome: null
+            }
+        }
+        this.metodo_pagamento_valido = ['dinheiro', 'credito', 'debito']
+    }
 
     calcularValorDaCompra(metodoDePagamento, itens) {
-        const formas_pagamento = ['dinheiro', 'debito', 'credito']
-        if(formas_pagamento.includes(metodoDePagamento)){
-            const prices = {cafe: 3, chantily: 1.5, suco: 6.2, sanduiche: 6.5, queijo: 2, salgado: 7.25, combo1: 9.5, combo2: 7.5}
-            let tot = 0;
-            for(let i = 0; i < itens.length; i++){
-                const element = itens[i];
-                const product_name = element.slice(0, element.indexOf(','));
-                const product_quantity = parseInt(element.slice(element.indexOf(',')+1));
-                tot += prices[product_name] * product_quantity
+        if(itens.length > 0 === false) {
+            return "Não há itens no carrinho de compra!"
+        }
+
+        if(this.valida_itens(itens) === false){
+            return "Item inválido!"
+        }
+
+        if(this.valida_forma_pagamento(metodoDePagamento) === false) {
+            return "Forma de pagamento inválida!"
+        }
+        const teste = this.calcula_total(metodoDePagamento, itens)
+        return teste
+
+    }
+       
+    calcula_total(metodoPagamento, itens){
+        const compra = itens.map(item => item.slice(0, item.indexOf(',')))
+        let total_bruto = 0;
+        for(let i = 0; i < itens.length; i++){
+            const element = itens[i]
+            const item_name = element.slice(0, element.indexOf(','))
+            const item_quantity = parseInt(element.slice(element.indexOf(',')+1))
+            
+            if(item_quantity > 0) {
+                if(this.itens_validos[item_name].item_extra) {
+                    if(compra.includes(this.itens_validos[item_name].item_prin_nome)) {
+                        total_bruto += this.itens_validos[item_name].preco * item_quantity
+                    } else {
+                        return 'Item extra não pode ser pedido sem o principal'
+                    }
+                } else {
+                    total_bruto += this.itens_validos[item_name].preco * item_quantity
+                }
+            } else {
+                return 'Quantidade inválida!'
             }
-            tot = this.calcula_valor_total(tot, metodoDePagamento)
-            //return `R$ ${tot.toFixed(2).replace('.', ',')}`
-            return this.formata_total(valor=tot, casas_decimais=2)
-        }
-        return 'Forma de pagamento inválida!';
-    }
-
-    forma_pagamento_valida(forma_pagamento, formas_pagamento_validas){
         
-    }    
-
-    calcula_valor_total(valor, metodoDePagamento) {
-        let valor_total = 0;
-        if (metodoDePagamento == 'credito'){
-            valor_total = valor * 1.03
-        } else if (metodoDePagamento == 'dinheiro') {
-            valor_total = valor * 0.95
-        } else {
-            valor_total = valor
         }
-        return valor_total
+        let total_liquido = this.calcula_taxa(total_bruto, metodoPagamento)
+        return total_liquido
     }
 
-    formata_total(valor, casas_decimais){
-        return `R$ ${valor.toFixed(casas_decimais).replace('.', ',')}`
+    calcula_taxa(valor, metodoPagamento) {
+        if(metodoPagamento === 'dinheiro') {
+            valor *= 0.95
+        } else if (metodoPagamento === 'credito') {
+            valor *= 1.03
+        }
+        let valor_formatado = `R$ ${valor.toFixed(2)}`.replace('.', ',')
+        return valor_formatado
     }
 
+
+    valida_itens(itens) {
+        for (let i = 0; i < itens.length; i++){
+            const element = itens[i];
+            const item_name = element.slice(0, element.indexOf(','));
+            if(this.itens_validos.hasOwnProperty(item_name)){
+                continue
+            } else {
+                return false;
+            }
+        }
+    }
+
+    valida_forma_pagamento(metodo) {
+        return this.metodo_pagamento_valido.includes(metodo) ? true : false
+    }
+
+    
 }
 
-export { CaixaDaLanchonete };
+const C1 = new CaixaDaLanchonete();
+console.log(C1.calcularValorDaCompra('dinheiro', ['cafe,4', 'sanduiche,3', 'queijo,2']));
+
+
+export { CaixaDaLanchonete };
