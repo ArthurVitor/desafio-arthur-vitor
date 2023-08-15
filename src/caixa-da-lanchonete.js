@@ -58,8 +58,8 @@ class CaixaDaLanchonete {
         if (!this.valida_forma_pagamento(metodoDePagamento)) {
           return "Forma de pagamento inválida!";
         }
-        const res = this.calcula_total(metodoDePagamento, itens);
-        return res;
+        const totalCompra = this.calcula_total(metodoDePagamento, itens);
+        return totalCompra;
       }
 
     valida_itens(itens) {
