@@ -43,7 +43,7 @@ class CaixaDaLanchonete {
                 item_prin_nome: null
             }
         }
-        this.metodo_pagamento_valido = ['dinheiro', 'credito', 'debito'] // metodos de pagamento validos
+        this.metodo_pagamento_valido = ['dinheiro', 'credito', 'debito']
     }
 
     calcularValorDaCompra(metodoDePagamento, itens) {
